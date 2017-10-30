@@ -1,14 +1,19 @@
-const fs = require('fs');
-const path = require('path');
 
+const render = require('../lib/render');
 
 function notFound (req, res){
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
+    render('error.html', {error: 'Not Found'}, (error, html)=>{
+        if (error) {
+            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.end(error.message);
+        }
 
-    const stream = fs.createReadStream(path.resolve('public', 'error.html'));
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        return res.end(html);
 
-    stream.pipe(res);
+
+    });
 
 
 }
